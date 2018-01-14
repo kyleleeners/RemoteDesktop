@@ -1,0 +1,85 @@
+\documentclass{article}
+
+\usepackage{fullpage}
+\usepackage{color}
+\usepackage{amsmath}
+\usepackage{url}
+\usepackage{verbatim}
+\usepackage{graphicx}
+\usepackage{parskip}
+\usepackage{amssymb}
+\usepackage{nicefrac}
+\usepackage{listings} % For displaying code
+
+
+\def\rubric#1{\gre{Rubric: \{#1\}}}{}
+
+% Colors
+\definecolor{blu}{rgb}{0,0,1}
+\def\blu#1{{\color{blu}#1}}
+\definecolor{gre}{rgb}{0,.5,0}
+\def\gre#1{{\color{gre}#1}}
+\definecolor{red}{rgb}{1,0,0}
+\def\red#1{{\color{red}#1}}
+
+% Math
+\def\norm#1{\|#1\|}
+\def\R{\mathbb{R}}
+\def\argmax{\mathop{\rm arg\,max}}
+\def\argmin{\mathop{\rm arg\,min}}
+\newcommand{\mat}[1]{\begin{bmatrix}#1\end{bmatrix}}
+\newcommand{\alignStar}[1]{\begin{align*}#1\end{align*}}
+
+% LaTeX
+\newcommand{\fig}[2]{\includegraphics[width=#1\textwidth]{a0f/#2}}
+\newcommand{\centerfig}[2]{\begin{center}\includegraphics[width=#1\textwidth]{#2}\end{center}}
+\def\items#1{\begin{itemize}#1\end{itemize}}
+\def\enum#1{\begin{enumerate}#1\end{enumerate}}
+
+\begin{document}
+
+\title{CPSC 340 Assignment 0}
+\author{Kyle Leeners, 30591119, w0u0b}
+\maketitle
+
+\begin{enumerate}
+\item Assume $||\cdot||_{\frac{1}{2}}$ is a norm. Then it must be the case that $||u+v||_{\frac{1}{2}} \leq ||u||_{\frac{1}{2}} + ||v||_{\frac{1}{2}}$. Let $u = [1,0]^T, v = [0,1]^T$. 
+ 
+$$||u+v||_{\frac{1}{2}} = (2\cdot\sqrt[]{1})^2 = 4$$
+$$||u||_{\frac{1}{2}} = ||v||_{\frac{1}{2}} = 1$$
+$$||u+v||_{\frac{1}{2}} = 4 > ||u||_{\frac{1}{2}} + ||v||_{\frac{1}{2}} = 2 $$
+So our assumption was incorrect and $||\cdot||_{\frac{1}{2}}$ cannot be a norm
+\item
+\begin{enumerate}
+\item $||A|| = \sqrt[]{\lambda_{max}(A^TA)} = \sqrt[]{\lambda_{max}(AA^T)} = ||A^T||$
+\item $||A||_F = \sum_{i=1}^n\sum_{j=1}^n(a_{i,j})^2$. This is the sum of squares of every value of the matrix A which corresponds $Tr(A^TA) = \sum_{i=1}^n\lambda_{i}(A^TA)$
+\end{enumerate}
+\item Let $g(v) = ||x||^2 - 1$. So we wish to maximize $f(x) = x^tAx$ subject to $g(v) = 0$
+$$\nabla f = \lambda\nabla g$$
+$$\nabla g = 2x$$
+$$\nabla f = \nabla x^TAx = \frac{\partial(x^tAx)}{\partial x} + \frac{\partial (Ax)^T}{\partial x} \cdot \frac{\partial (x^TAx)}{\partial y} = Ax + \frac{\partial (x^TA^T)}{\partial x}\cdot \frac{\partial(y^Tx)}{\partial y} = Ax + A^Tx = 2Ax$$
+$$\Rightarrow 2Ax = \lambda 2x \Rightarrow Ax = \lambda x$$
+This implies that x must be an eigenvector of A. 
+$$f(x) = x^TAx = x^T\lambda x = \lambda x^Tx = \lambda ||x||^2 = \lambda$$
+Therefore, the max of $f(x)$ subject to $||x||^2 = 1$ is equivalent to $\lambda_{max}$
+\item 
+\begin{enumerate}
+\item Let $\lambda, x$ be anyt eigenvector, eigenvalue pair of A, then:
+$$Ax = \lambda x$$
+$$\Rightarrow x^TAx = \lambda x^Tx$$
+$$\Rightarrow \lambda = \frac{x^TAx}{||x||^2} = \frac{x^TBB^Tx}{||x||^2} = \frac{(B^Tx)^TB^Tx}{||x|^2} = \frac{||Bx||^2}{||x||^2} \geq 0$$
+\item First we will prove if A is positive definite then B will have full row rank. Since A is positive definite all eigen values are positive. This implies that the matrix A will have full row/column rank (since it is symmetric). Since $A = BB^T$ and $B \in \mathbb{R}^{n\times k}$ B must have full row-rank.
+\\
+\\
+Now proof if B has full row rank, A will be positive definite. We know $rank(B) = rank(B^T)$. Furthermore, we know $rank(A) = rank(BB^T) = min\{rank(B), rank(B^T)\} = rank(B)$. Since $B \in \mathbb{R}^{n\times k}$ and is full row rank, $rank(B) = n$ which implies $rank(A) = n$. Since $A\in \mathbb{R}^{n\times n}$ A must be full rank and have a nullity of 0. This implies all eigenvalues are greater than 0 so A is positive definite
+\end{enumerate}
+\item ASK TA
+\item For sake of saving paper I skipped some of derivations of derivates / second derivates. These would have been done to death in previous math classes. I'll show some work for every other question but the general format is (1) Find the roots of the partial derivates (2) create the Hessian matrix of second derivates (3) evaluate the eigenvalues of this matrix at the roots; if all eigenvalues are positive we have a min, all are negative we have a max, a mix of positive and negative we have a saddle-point.00
+\begin{enumerate}
+\item Not sure, since the root is a function $x_2 = 4x_1^2$
+\item $Roots: (0,0,0), (1,0,0), (-1,0,0)$
+\\ $\frac{\partial^2 }{\partial x_1^2} = 12x_1^2 -4, \frac{\partial^2 }{\partial x_2^2} = 2, \frac{\partial^2 }{\partial x_3^2} = 4, \frac{\partial^2 }{\partial x_1x_2} = 0, \frac{\partial^2 }{\partial x_2x_3} = 2, \frac{\partial^2}{\partial x_1x_3} = 0$
+\end{enumerate}
+\end{enumerate}
+\end{document}
+[]
