@@ -93,6 +93,7 @@ So if $f(x,y) \geq 0 \rightarrow c - b^TA^{-1}b \geq 0$
 \end{enumerate}
 Assume $(c - b^TA^{-1}b) \geq 0$. From the previous proof, we know $y^2(c - b^TA^{-1}b)$ is the global minimum $x^*$ for $f(x,y) = x^TAx + 2yb^tx + cy^2$. This implies that $\forall_{x,y}, f(x,y) \geq 0$. Recall that $f(x,y) = (x,y)D(x,y)^T = z^TDz$. Since we know $z^TDz\geq 0 $ it follows that $D \succeq 0$.
 \item 
+Note when I say "evaluate the Hessian at the roots", I mean find the eigenvalues of the Hessian after inputing the stationary points
 \begin{enumerate}
 \item $\frac{\partial f(x_1,x_2)}{\partial x_1} = 16x_1(4x_1^2- x_2)$\\
 $\frac{\partial f(x_1,x_2)}{\partial x_2} = -2(4x_1^2- x_2)$\\
@@ -119,7 +120,7 @@ $\frac{\partial ^2f(x_1,x_2)}{\partial x_2^2} = 12x_2 - 12$\\
 $\frac{\partial ^2f(x_1,x_2)}{\partial x_1x_2} = 6x_1$\\
 Evaluating the Hessian at the roots gives the following:\\
 Strict local minimizer: $(0,2)$
-Saddle point: $(0,0)$
+Non-strict local maximizer: $(0,0)$
 \item $\frac{\partial f(x_1,x_2)}{\partial x_1} = 4x_1^3 + 4x_1x_2 - 8x_1 - 8$\\
 $\frac{\partial f(x_1,x_2)}{\partial x_2} = 2x_1^2 + 2x_2 - 8$\\
 Roots: $(1,3)$\\
