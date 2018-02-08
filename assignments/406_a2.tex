@@ -273,8 +273,8 @@
 
     \begin{document}
     
-    
     \maketitle
+    Kyle Leeners, 30591119, w0u0b
 
     \hypertarget{exercise-1}{%
 \section{Exercise 1}\label{exercise-1}}
@@ -525,28 +525,26 @@ b)
 \nabla f(x) = 2A^TAx - 2A^Tb + 2\lambda L^TLx \\
 \Rightarrow A^TAx + \lambda L^TLx = A^Tb\\
 \Rightarrow (A^TA + \lambda L^TL)x = A^Tb\\$
-We know that $ (A^TA + \lambda L^TL)^{-1}$ must exist since RLS has a unique solution. So 0 is not an eigenvalue\\
-$\Rightarrow y^T(A^TA + \lambda L^TL)y \Rightarrow y^TA^TAy + \lambda y^TL^TLy \Rightarrow ||Ay||^2 + \lambda||Ly||^2 > 0$\\
-Since there is not y s.t the above equation is 0, it must be the case that the $null(A)\land null(L)= \{0\}$\\
+We know that $ (A^TA + \lambda L^TL)^{-1}$ must exist since RLS has a unique solution. Since the inverse exists, $null(A^TA + \lambda L^TL) = \{0\}$.\\
+Note: If $x \in null(A) \land null(B), Ax = 0 \land Ay = 0$\\
+$\Rightarrow (A + B)x = Ax + Bx = 0 + 0 = 0 \rightarrow x \in null(A+B)$\\
+$\Rightarrow null(A) \land null(B) \subseteq null(A+B)$\\
+This means that since $null(A^TA + \lambda L^TL) = \{0\}, null(A^TA)\land null(\lambda(L^TL)) = \{0\}$\\
+Furthermore, note that if $x \in null(A^TA) \rightarrow A^TAx = 0$\\
+$\Rightarrow x^TA^TAx = 0 \rightarrow ||Ax|| = 0 \rightarrow x \in null(A)$\\
+Similarly, if $ x\in null(A) \rightarrow Ax = 0 \rightarrow A^TAx = 0 \rightarrow x \in null(A^TA)$\\
+Combining these we have, $null(A) = null(A^TA)$\\
+$\Rightarrow null(A)\land null(L) = null(A^TA) \land null(L^TL) = \{0\}$\\
 
-Proof: $null(A)\land null(L) = \{0\}$ then RLS has a unqiue solution. Proof
-by contradiciton, suppose $null(A)\land null(L) = \{0\}$ and RLS does not
-have a unique solution\\
+Proof: If null(A)\^{}null(L) = \{0\} then, RLS has a unique solution\\
+From the previous proof we know to show RLS has a unique solution, we need to show that $A^TA + \lambda L^TL$ is invertible.\\
+It is sufficient to show that $A^TA + \lambda L^TL$ is positve definite (no 0 eigenvalues)\\
+$A^TA +\lambda L^TL \rightarrow x^T(A^TA +\lambda L^TL)x = x^TA^TAx +\lambda x^TL^TLx = ||Ax|| + \lambda||Lx||$\\
+By our assumption there is no x such that both Ax and Lx are 0, therefore $||Ax|| + \lambda||Lx|| > 0$\\
+$\Rightarrow A^TA + \lambda L^TL$ is positive definite and invertible\\
+So there exists a unique solution for $(A^TA +\lambda L^TL)x = A^Tb$
 
-$Let\; x,y\in \mathbb R^n, x \neq y\; and\; \phi(x) = \phi(y) = c_i = the\;min\;to\;the\;RLS\\
-Consider\;3\;cases:\\
-1)\; x,y \in null(A)\land null(L)\\
-\Rightarrow since\; null(A)\land null(L) = \{0\}, it\;must\;be\;that\;x = y = 0\\
-But\;we\;assumed\; x\neq y\;so\;this\;cannot\;be\;the\;case\\
-2)\; x,y \in null(A)\land x,y \not\in null(L)\\
-f(x) = ||b||^2 + \lambda||Lx||^2\\
-\nabla f(x) = 2\lambda L^TLx
-\Rightarrow L^TLx = 0 \rightarrow x \in null(L^TL) \rightarrow x \in null(L)\\
-But,\;it\;was\;assumed\;that\;x \not\in null(L)\;so\;this\;case\;cannot\;be\;possible,\;a\;similar\;argument\;can\;be\;made\;for\;y\\
-3)\;\; x,y \in null(L)\land x,y \not\in null(A)\\
-f(x) = ||Ax-b||^2\\
-\nabla f(x) = 2A^TAx - 2A^Tb \rightarrow A^TAx = A^Tb
-$
+
 
     
 
