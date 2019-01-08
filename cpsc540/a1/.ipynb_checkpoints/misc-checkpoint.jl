@@ -1,3 +1,5 @@
+using Random
+
 mutable struct LinearModel
 	predict # Funcntion that makes predictions
 	w # Weight vector
@@ -33,7 +35,17 @@ function isfinitereal(x)
 end
 
 ## Compute gaussian rbf of given dataset with given variance
-function rbfBasis(X, σ)
-    squaredMatrix = distancesSquared(X,X)
-    return exp.(-squaredMatrix / 2σ)
+function rbfBasis(Xi, Xj, σ)
+    return exp.(-distancesSquared(Xi,Xj) / 2σ)
+end
+
+## Randomly split data from https://discourse.julialang.org/t/simple-tool-for-train-test-split/473/8
+function partitionTrainTest(data, y, train_perc = 0.7)
+    n = size(data,1)
+    mid = Int(ceil(n/2))
+    idx = collect(1:n)
+    rand_idx = idx[randperm(length(idx))]
+    trainIdxs = rand_idx[1:mid]
+    testIdxs = rand_idx[mid+1:end]
+    return data[trainIdxs,:], y[trainIdxs,:], data[testIdxs,:], y[testIdxs,:]
 end

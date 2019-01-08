@@ -9,7 +9,8 @@ data = load("nonLinear.jld")
 # Fit least squares model
 include("leastSquares.jl")
 # model = leastSquares(X,y)
-model = leastSquaresRBFL2(X,y,1,1)
+# model = leastSquaresRBFL2(X,y,1,1)
+model = leastSquaresRBFL2CV(X,y)
 
 # Report the error on the test set
 using Printf
