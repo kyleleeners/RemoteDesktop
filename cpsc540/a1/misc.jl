@@ -39,7 +39,7 @@ function rbfBasis(Xi, Xj, σ)
     return exp.(-distancesSquared(Xi,Xj) / 2σ)
 end
 
-## Randomly split data from https://discourse.julialang.org/t/simple-tool-for-train-test-split/473/8
+## Randomly split data
 function partitionTrainTest(data, y, train_perc = 0.7)
     n = size(data,1)
     mid = Int(ceil(n/2))

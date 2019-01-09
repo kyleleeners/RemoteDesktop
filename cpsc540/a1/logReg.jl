@@ -52,53 +52,46 @@ function logRegOnevsAll(X,y)
 	return LinearModel(predict,W)
 end
 
-function softmaxClassifier(X,y)
-    
-end
-
 function softmaxObj(w,X,y)
-    XW = dot(X,W)
-    Z = sum(exp.(XW))
-    
-    f = -sum(XW[y] - log.(Z))
+	# X dimensions and number of classes
+	n,d = size(X)
+	k = maximum(y)
+
+	# # create masking matrix
+	mask = falses(n, k)
+	for i = 1:length(y)
+		mask[i,y[i]] = true
+	end
+
+	# compute XW
+	W = reshape(w, (d,k))
+	XW = X*W
+
+	# compute inner function
+	sumExp = sum(exp.(XW), dims=2)
+
+	# compute function
+	f = sum(-XW[mask] + log.(sumExp))
+
+	# compute gradient
+	g = X'*((exp.(XW) ./ sumExp) - mask)
+
+	return (f,g[:])
 end
 
+function softmaxClassifier(X,y)
+	n,d = size(X)
+ 	k = size(unique(y),1)
 
-    def funObj(self, w, X, y):
-        n, d = X.shape
-        k = self.n_classes
+	w = zeros(d*k)
 
-        W = np.reshape(w, (d, k))
+	funObj(w) = softmaxObj(w,X,y)
 
-        y_binary = np.zeros((n, k)).astype(bool)
-        y_binary[np.arange(n), y] = 1
+	w = findMin(funObj,w,verbose=false)
 
-        XW = np.dot(X, W)
-        Z = np.sum(np.exp(XW), axis=1)
+	# Make linear prediction function
+	W = reshape(w,(d,k))
+	predict(Xhat) = mapslices(argmax,Xhat*W,dims=2)
 
-        # Calculate the function value
-        f = - np.sum(XW[y_binary] - np.log(Z))
-
-        # Calculate the gradient value
-        g = X.T.dot(np.exp(XW) / Z[:,np.newaxis] - y_binary)
-
-        return f, g.ravel()
-
-    def fit(self,X, y):
-        n, d = X.shape
-        k = np.unique(y).size
-
-        self.n_classes = k
-        self.w = np.zeros(d*k)
-
-        # Initial guess
-        utils.check_gradient(self, X, y)
-        (self.w, f) = findMin.findMin(self.funObj, self.w.ravel(),
-                                      self.maxEvals, X, y, verbose=self.verbose)
-
-        self.w = np.reshape(self.w, (d, k))
-
-    def predict(self, X):
-        yhat = np.dot(X, self.w)
-
-        return np.argmax(yhat, axis=1)
+	return LinearModel(predict,W)
+end
