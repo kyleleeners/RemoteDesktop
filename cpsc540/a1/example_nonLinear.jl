@@ -1,5 +1,6 @@
 # Load X and y variable
 using JLD
+using Printf
 data = load("nonLinear.jld")
 (X,y,Xtest,ytest) = (data["X"],data["y"],data["Xtest"],data["ytest"])
 
@@ -13,7 +14,6 @@ include("leastSquares.jl")
 model = leastSquaresRBFL2CV(X,y)
 
 # Report the error on the test set
-using Printf
 t = size(Xtest,1)
 yhat = model.predict(Xtest)
 testError = sum((yhat - ytest).^2)/t

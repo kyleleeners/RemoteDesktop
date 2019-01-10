@@ -1,5 +1,63 @@
 include("misc.jl")
 using LinearAlgebra
+using MathProgBase, GLPKMathProgInterface
+
+function leastAbsolutes(X,y)
+
+	# resphape y
+	y = reshape(y, length(y))
+
+	# Add bias column
+	n = size(X,1)
+	Z = [ones(n,1) X]
+	m = size(Z,2)
+
+	# prepare LP
+	A = [Z -I ; -Z -I]
+	c = [zeros(m); ones(n)]
+	b = [y ; -y]
+	d = -Inf*ones(size(A,1))
+	lb = -Inf*ones(n+m)
+	ub = Inf*ones(n+m)
+
+	# run through solver
+	solution = linprog(c, A, d, b, lb, ub, GLPKSolverLP())
+	w = solution.sol[1:m]
+
+	# Make linear prediction function
+	predict(Xtilde) = [ones(size(Xtilde,1),1) Xtilde]*w
+
+	# Return model
+	return LinearModel(predict,w)
+end
+
+function leastMax(X,y)
+
+	# resphape y
+	y = reshape(y, length(y))
+
+	# Add bias column
+	n = size(X,1)
+	Z = [ones(n,1) X]
+	m = size(Z,2)
+	res = -ones(size(y))
+
+	# prepare LP
+	A = [Z res; -Z res]
+	c = [zeros(m); 1]
+	b = [y ; -y]
+	d = -Inf*ones(size(b))
+
+	# run through solver
+	solution = linprog(c, A, d, b, -Inf, Inf, GLPKSolverLP())
+	w = solution.sol[1:m]
+
+	# Make linear prediction function
+	predict(Xtilde) = [ones(size(Xtilde,1),1) Xtilde]*w
+
+	# Return model
+	return LinearModel(predict,w)
+end
 
 function leastSquares(X,y)
 
