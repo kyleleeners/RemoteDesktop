@@ -80,9 +80,13 @@ plt.scatter(X[0, :], X[1, :], c=Y[0, :], s=40, cmap=plt.cm.Spectral)
 # Build a two-layer neural network (so one hidden layer) with sigmoid activations
 # and MSE loss. The hidden_state_dimensionality should be set to 1 using the variable
 # below.
+
+X = X.T
+Y = Y.T
+
 hidden_state_size = 1
-input_dim = X.shape[0]
-output_dim = Y.shape[0]
+input_dim = X.shape[1]
+output_dim = Y.shape[1]
 
 # Define the 2-layer network here (fill in yout code)
 model = {}
@@ -129,10 +133,19 @@ for epoch in range(0, numberEpochs):
 
 classEstimate = np.zeros((400,1), dtype='uint8')
 
-# for i in range(0, 400):
-#     # Forward pass (fill in your code)
-#
-#
-#     classEstimate[i,0] = (y_hat > 0.5)
-#
-# plt.scatter(X[0, :], X[1, :], c=classEstimate[:,0], s=40, cmap=plt.cm.Spectral)
+y_hat = np.array(Y.shape[1])
+
+for i in range(0, 400):
+    # Forward pass (fill in your code)
+    xi = X[i:i+1, :]
+    a0 = model['hidden-linear'].forward(xi)
+    a1 = model['hidden-sigmoid'].forward(a0)
+    a2 = model['linear'].forward(a1)
+    y_hat = model['sigmoid'].forward(a2).item(0)
+
+    classEstimate[i,0] = (y_hat > 0.5)
+
+X = X.T
+Y = Y.T
+
+plt.scatter(X[0, :], X[1, :], c=classEstimate[:,0], s=40, cmap=plt.cm.Spectral)
