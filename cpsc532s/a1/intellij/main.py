@@ -1,9 +1,6 @@
 import numpy as np
+import numpy.matlib
 import matplotlib.pyplot as plt
-import sklearn
-import sklearn.datasets
-import sklearn.linear_model
-import sklearn.datasets
 
 # This is referred above as f(u).
 class nn_MSECriterion:
@@ -49,18 +46,9 @@ class nn_Linear:
         gradParams = [self.gradWeight, self.gradBias]
         return params, gradParams
 
+
+# Let's test some dummy inputs for a full pass of forw
 dataset_size = 1000
-
-# Generate random inputs within some range.
-x = np.random.uniform(0, 6, (dataset_size, 4))
-# Generate outputs based on the inputs using some function.
-y1 = np.sin(x.sum(axis = 1))
-y2 = np.sin(x[:, 1] * 6)
-y3 = np.sin(x[:, 1] + x[:, 3])
-y = np.array([y1, y2, y3]).T
-
-print(x.shape)
-print(y.shape)
 
 def load_planar_dataset():
     np.random.seed(1)
@@ -84,25 +72,26 @@ def load_planar_dataset():
     return X, Y
 
 # Load the data
-X, Y = load_planar_dataset();
+X, Y = load_planar_dataset()
 
 # Visualize the data:
-plt.scatter(X[0, :], X[1, :], c=Y[0, :], s=40, cmap=plt.cm.Spectral);
+plt.scatter(X[0, :], X[1, :], c=Y[0, :], s=40, cmap=plt.cm.Spectral)
 
 # Build a two-layer neural network (so one hidden layer) with sigmoid activations
 # and MSE loss. The hidden_state_dimensionality should be set to 1 using the variable
 # below.
-hidden_state_size = 1;
-input_size = X.shape[0]
-output_size = Y.shape
+hidden_state_size = 1
+input_dim = X.shape[0]
+output_dim = Y.shape[0]
 
-# Your code goes here.
+# Define the 2-layer network here (fill in yout code)
 model = {}
-model['hidden-linear'] = nn_Linear(input_size, hidden_state_size)
+model['hidden-linear'] = nn_Linear(input_dim, hidden_state_size)
 model['hidden-sigmoid'] = nn_Sigmoid()
-model['linear'] = nn_Linear(hidden_state_size, output_size)
+model['linear'] = nn_Linear(hidden_state_size, output_dim)
 model['sigmoid'] = nn_Sigmoid()
 model['loss'] = nn_MSECriterion()
+
 
 # Optimize the parameters of the neural network using stochastic gradient descent
 # using the following parameters
@@ -113,8 +102,8 @@ numberEpochs = 300
 for epoch in range(0, numberEpochs):
     loss = 0
     for i in range(0, Y.size):
-        xi = x[i:i+1, :]
-        yi = y[i:i+1, :]
+        xi = X[i:i+1, :]
+        yi = Y[i:i+1, :]
 
         # Forward pass (fill in your code)
         a0 = model['hidden-linear'].forward(xi)
@@ -140,10 +129,10 @@ for epoch in range(0, numberEpochs):
 
 classEstimate = np.zeros((400,1), dtype='uint8')
 
-for i in range(0, 400):
-    # Forward pass (fill in your code)
-
-
-    classEstimate[i,0] = (y_hat > 0.5)
-
-plt.scatter(X[0, :], X[1, :], c=classEstimate[:,0], s=40, cmap=plt.cm.Spectral);
+# for i in range(0, 400):
+#     # Forward pass (fill in your code)
+#
+#
+#     classEstimate[i,0] = (y_hat > 0.5)
+#
+# plt.scatter(X[0, :], X[1, :], c=classEstimate[:,0], s=40, cmap=plt.cm.Spectral)
