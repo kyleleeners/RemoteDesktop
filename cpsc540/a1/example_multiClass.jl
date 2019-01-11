@@ -15,6 +15,7 @@ function reportErrorAndPlot(model, X, y, Xtest, ytest)
     k = maximum(y)
     include("plot2Dclassifier.jl")
     plot2Dclassifier(X,y,model,Xtest=Xtest,ytest=ytest,biasIncluded=true,k=5)
+    show()
 end
 
 data = load("multiData.jld")

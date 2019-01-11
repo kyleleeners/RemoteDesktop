@@ -1,21 +1,5 @@
-include("misc.jl")
-using LinearAlgebra
-using MathProgBase, GLPKMathProgInterface
-
-function leastSquares(X,y)
-	# Add bias column
-	n = size(X,1)
-	Z = [ones(n,1) X]
-
-	# Find regression weights minimizing squared error
-	w = (Z'*Z)\(Z'*y)
-
-	# Make linear prediction function
-	predict(Xtilde) = [ones(size(Xtilde,1),1) Xtilde]*w
-
-	# Return model
-	return LinearModel(predict,w)
-end
+#################################################################
+############################## 3.1 ##############################
 
 function leastSquaresRBFL2(X,y,σ,λ)
     # create rbf
@@ -92,6 +76,56 @@ function gridSearch(Xtrain,ytrain,Xtest,ytest)
     end
     return bestSig, bestLamb
 end
+
+#################################################################
+############################## 3.2 ##############################
+
+function softmaxObj(w,X,y)
+	# X dimensions and number of classes
+	n,d = size(X)
+	k = maximum(y)
+
+	# # create masking matrix
+	mask = falses(n, k)
+	for i = 1:length(y)
+		mask[i,y[i]] = true
+	end
+
+	# compute XW
+	W = reshape(w, (d,k))
+	XW = X*W
+
+	# compute inner function
+	sumExp = sum(exp.(XW), dims=2)
+
+	# compute function
+	f = sum(-XW[mask] + log.(sumExp))
+
+	# compute gradient
+	g = X'*((exp.(XW) ./ sumExp) - mask)
+
+	return (f,g[:])
+end
+
+function softmaxClassifier(X,y)
+	n,d = size(X)
+ 	k = size(unique(y),1)
+
+	w = zeros(d*k)
+
+	funObj(w) = softmaxObj(w,X,y)
+
+	w = findMin(funObj,w,verbose=false)
+
+	# Make linear prediction function
+	W = reshape(w,(d,k))
+	predict(Xhat) = mapslices(argmax,Xhat*W,dims=2)
+
+	return LinearModel(predict,W)
+end
+
+#################################################################
+############################## 3.3 ##############################
 
 function leastAbsolutes(X,y)
 	# resphape y

@@ -18,6 +18,7 @@ function reportErrorAndPlot(model, X, Xtest, y, ytest, modelName)
     Xhat = minimum(X):.01:maximum(X)
     yhat = model.predict(Xhat)
     plot(Xhat,yhat,"g")
+    show()
 end
 
 data = load("outliersData.jld")

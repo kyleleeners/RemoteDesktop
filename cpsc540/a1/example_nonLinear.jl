@@ -3,6 +3,8 @@ using JLD
 using Printf
 using PyPlot
 
+PyPlot.pygui(true)
+
 function reportErrorAndPlot(model, X, Xtest, ytest)
     # Report the error on the test set
     t = size(Xtest,1)
@@ -18,9 +20,8 @@ function reportErrorAndPlot(model, X, Xtest, ytest)
     Xhat = reshape(Xhat,length(Xhat),1) # Make into an n by 1 matrix
     yhat = model.predict(Xhat)
     plot(Xhat[:],yhat,"r")
-    ylim((-300,400))
+    show()
 end
-
 
 data = load("nonLinear.jld")
 (X,y,Xtest,ytest) = (data["X"],data["y"],data["Xtest"],data["ytest"])
