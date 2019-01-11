@@ -33,19 +33,3 @@ end
 function isfinitereal(x)
 	return (imag(x) == 0) & (!isnan(x)) & (!isinf(x))
 end
-
-## Compute gaussian rbf of given dataset with given variance
-function rbfBasis(Xi, Xj, σ)
-    return exp.(-distancesSquared(Xi,Xj) / 2σ)
-end
-
-## Randomly split data
-function partitionTrainTest(data, y, train_perc = 0.7)
-    n = size(data,1)
-    mid = Int(ceil(n/2))
-    idx = collect(1:n)
-    rand_idx = idx[randperm(length(idx))]
-    trainIdxs = rand_idx[1:mid]
-    testIdxs = rand_idx[mid+1:end]
-    return data[trainIdxs,:], y[trainIdxs,:], data[testIdxs,:], y[testIdxs,:]
-end

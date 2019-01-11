@@ -94,6 +94,11 @@ function leastSquaresRBFL2(X,y,σ,λ)
 	return LinearModel(predict,w)
 end
 
+## Compute gaussian rbf of given dataset with given variance
+function rbfBasis(Xi, Xj, σ)
+    return exp.(-distancesSquared(Xi,Xj) / 2σ)
+end
+
 function leastSquaresRBFL2CV(X,y)
 
     # split data into training and test
@@ -108,8 +113,18 @@ function leastSquaresRBFL2CV(X,y)
     return leastSquaresRBFL2(Xtrain,ytrain,σ,λ)
 end
 
-function gridSearch(Xtrain,ytrain,Xtest,ytest)
+## Randomly split data
+function partitionTrainTest(data, y, train_perc = 0.7)
+    n = size(data,1)
+    mid = Int(ceil(n/2))
+    idx = collect(1:n)
+    rand_idx = idx[randperm(length(idx))]
+    trainIdxs = rand_idx[1:mid]
+    testIdxs = rand_idx[mid+1:end]
+    return data[trainIdxs,:], y[trainIdxs,:], data[testIdxs,:], y[testIdxs,:]
+end
 
+function gridSearch(Xtrain,ytrain,Xtest,ytest)
     # set defaults
     bestError = typemax(Int32)
     bestLamb = nothing

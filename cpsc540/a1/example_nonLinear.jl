@@ -1,6 +1,27 @@
 # Load X and y variable
 using JLD
 using Printf
+using PyPlot
+
+function reportErrorAndPlot(model, X, Xtest, ytest)
+    # Report the error on the test set
+    t = size(Xtest,1)
+    yhat = model.predict(Xtest)
+    testError = sum((yhat - ytest).^2)/t
+    @printf("TestError = %.2f\n",testError)
+
+    # Plot model
+    figure()
+    plot(X,y,"b.")
+    plot(Xtest,ytest,"g.")
+    Xhat = minimum(X):.1:maximum(X)
+    Xhat = reshape(Xhat,length(Xhat),1) # Make into an n by 1 matrix
+    yhat = model.predict(Xhat)
+    plot(Xhat[:],yhat,"r")
+    ylim((-300,400))
+end
+
+
 data = load("nonLinear.jld")
 (X,y,Xtest,ytest) = (data["X"],data["y"],data["Xtest"],data["ytest"])
 
@@ -9,23 +30,10 @@ data = load("nonLinear.jld")
 
 # Fit least squares model
 include("leastSquares.jl")
-# model = leastSquares(X,y)
-# model = leastSquaresRBFL2(X,y,1,1)
-model = leastSquaresRBFL2CV(X,y)
+leastSquaresModel = leastSquares(X,y)
+leastSquaresRBFL2Model = leastSquaresRBFL2(X,y,1,1)
+leastSquaresRBFL2CVModel = leastSquaresRBFL2CV(X,y)
 
-# Report the error on the test set
-t = size(Xtest,1)
-yhat = model.predict(Xtest)
-testError = sum((yhat - ytest).^2)/t
-@printf("TestError = %.2f\n",testError)
-
-# Plot model
-using PyPlot
-figure()
-plot(X,y,"b.")
-plot(Xtest,ytest,"g.")
-Xhat = minimum(X):.1:maximum(X)
-Xhat = reshape(Xhat,length(Xhat),1) # Make into an n by 1 matrix
-yhat = model.predict(Xhat)
-plot(Xhat[:],yhat,"r")
-ylim((-300,400))
+reportErrorAndPlot(leastSquaresModel, X, Xtest, ytest)
+reportErrorAndPlot(leastSquaresRBFL2Model, X, Xtest, ytest)
+reportErrorAndPlot(leastSquaresRBFL2CVModel, X, Xtest, ytest)
